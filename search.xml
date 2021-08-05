@@ -3,6 +3,10 @@
   
   
     
+    
+    
+    
+    
     <entry>
       <title>iOS多次移除Observer或者移除不存在的Observer导致崩溃的3中解决方案</title>
       <link href="/2021/08/05/iOSObserverCrashHandle/"/>
@@ -56,33 +60,6 @@
     </entry>
     
     
-    
-    <entry>
-      <title>Hexo搭建教程</title>
-      <link href="/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/"/>
-      <url>/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/</url>
-      
-        <content type="html"><![CDATA[<h5 id="一、环境准备"><a href="#一、环境准备" class="headerlink" title="一、环境准备"></a>一、环境准备</h5><blockquote><ul><li>注册一个gitHub账号</li><li>安装<a href="https://brew.sh/index_zh-cn.html">homebrew</a>：使用它可以安装Mac没有预装但你会需要的东西</li><li>安装 <a href="https://nodejs.org/en/">node.js</a>：安装的node.js中已经包含了npm</li><li>检验node和npm是否安装成功：进入到终端输入指令：<code>node -v</code> <code>npm -v</code></li></ul></blockquote><hr><h5 id="二、Hexo安装"><a href="#二、Hexo安装" class="headerlink" title="二、Hexo安装"></a>二、Hexo安装</h5><ul><li><p>安装</p><blockquote><ol><li>使用npm安装：npm install -g hexo-cli</li><li>版本检查： hexo -v</li></ol></blockquote></li><li><p>在本地建站</p><blockquote><ol><li>在终端切换（cd）一个你想指定的目录下，执行下面这个命令: hexo init blog</li><li> 在新建好的blog文件夹下安装 hexo配置：npm install</li><li> 开启服务器：hexo server   </li><li> 本地访问检查：<a href="http://localhost:4000/">http://localhost:4000/</a></li></ol></blockquote></li><li><p>可能出现的问题：服务器启动失败：可能是node版本过低，可尝试更新！</p></li></ul><hr><h5 id="三、Github库关联与代码托管"><a href="#三、Github库关联与代码托管" class="headerlink" title="三、Github库关联与代码托管"></a>三、Github库关联与代码托管</h5><ol><li><p>在GitHub新建远程仓库</p><p><img src="/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/remoteRes.png" alt="&quot;仓库构建规则&quot;"></p></li><li><p>hexo本地关联配置</p><blockquote><p>打开刚刚新建的blog文件夹，进入到_config.yml文件夹下，可以用sublime打开或者其他工具<br>更改添加以下内容（注意此处要在冒号的后面加上空格）</p></blockquote><p><img src="/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/configsetting.png" alt="配置信息"></p></li><li><p>文件生成与发布</p></li></ol><blockquote><ul><li><p>生成静文件<br>hexo generate    </p></li><li><p>部署网站<br>hexo deploy </p></li></ul></blockquote><p><strong>注意：这里可能会遇到部署不成功的情况并报错：ERROR Deployer not found: git</strong></p><p>解决方案：因为没安装<code>hexo-deployer-git</code>插件，在<strong>站点目录</strong>下输入下面的插件安装就好了：npm install hexo-deployer-git –save；安装好后尝试重新部署 hexo d即可</p><hr><h5 id="四、首次打开404问题解决"><a href="#四、首次打开404问题解决" class="headerlink" title="四、首次打开404问题解决"></a>四、首次打开404问题解决</h5><h6 id="针对“hexo上传博客后，网页始终显示404，无法刷新网页问题：需要按照GitHub的要求修改相关设置，主要有一下两点”"><a href="#针对“hexo上传博客后，网页始终显示404，无法刷新网页问题：需要按照GitHub的要求修改相关设置，主要有一下两点”" class="headerlink" title="针对“hexo上传博客后，网页始终显示404，无法刷新网页问题：需要按照GitHub的要求修改相关设置，主要有一下两点”"></a>针对“hexo上传博客后，网页始终显示404，无法刷新网页问题：需要按照GitHub的要求修改相关设置，主要有一下两点”</h6><p>1.<a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">Configuring a publishing source for your GitHub Pages site</a></p><p>2.确保仓库名称与用户名称一致，详见（三.1中的描述）；如果不一致需要在github仓库的settings—–&gt;Options——&gt;Repository name 做修改!(注意修改后本地的hexo配置仓库路径也要修改成新的)</p><p><img src="/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/rename.png" alt="&quot;rename&quot;"></p><hr><h6 id="五、主题修改"><a href="#五、主题修改" class="headerlink" title="五、主题修改"></a>五、主题修改</h6><ul><li><p>参考链接：<a href="https://hexo.io/themes/">https://hexo.io/themes/</a></p></li><li><p>其实就是拿到你喜欢主题的链接，然后到blog目录中的themes文件夹下执行命令下载主题： git clone 链接地址</p></li><li><p>来到_config.yml中更改想用主题的名字（在themes中选择填写）</p><p><img src="/2021/08/04/Hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/theme.png" alt="&quot;_config主题修改&quot;"></p></li></ul><hr><h5 id="六、常用命名"><a href="#六、常用命名" class="headerlink" title="六、常用命名"></a>六、常用命名</h5><blockquote><ul><li>//清除缓存文件 (db.json) 和已生成的静态文件 (public)。在某些情况（尤其是更换主题后），如果发现您对站点的更改无论如何也不生效，您可能需要运行该命令。<br>hexo clean    </li><li>//生成静态文件<br>hexo generate</li><li>//部署网站<br>hexo deploy</li><li>//新建文章<br>hexo new “文章名”  </li><li>//查看帮助<br>hexo help </li><li>//查看Hexo的版本<br>hexo version </li></ul></blockquote><hr><h5 id="七、相关插件"><a href="#七、相关插件" class="headerlink" title="七、相关插件"></a>七、相关插件</h5><blockquote><ul><li>图片显示：npm install <a href="https://github.com/CodeFalling/hexo-asset-image">https://github.com/CodeFalling/hexo-asset-image</a> –save</li></ul><blockquote><p>根目录中<code>_config.yml</code>文件的配置项<code>post_asset_folder</code>为<code>true</code></p></blockquote></blockquote><hr><h5 id="八、Blog"><a href="#八、Blog" class="headerlink" title="八、Blog"></a>八、Blog</h5><blockquote><p><a href="https://yuanliangyl.github.io/">个人站点:AlbertYuan’s Blog</a></p></blockquote>]]></content>
-      
-      
-      <categories>
-          
-          <category> Hexo </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Hexo </tag>
-            
-            <tag> HTML5 </tag>
-            
-            <tag> CSS </tag>
-            
-        </tags>
-      
-    </entry>
     
     
   
