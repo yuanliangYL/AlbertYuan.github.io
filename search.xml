@@ -3,6 +3,35 @@
   
   
     
+    <entry>
+      <title>iOS音视频开发（二）开发库的选择及Mac环境搭建</title>
+      <link href="/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/"/>
+      <url>/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/</url>
+      
+        <content type="html"><![CDATA[<h4 id="一、各平台特有音视频开发库"><a href="#一、各平台特有音视频开发库" class="headerlink" title="一、各平台特有音视频开发库"></a>一、各平台特有音视频开发库</h4><ul><li>iOS：AVFoundation，AudioUnit等</li><li>Android：MediaPlayer、MediaCodec等</li><li>Windows：Directshow等</li></ul><hr><h4 id="二、跨平台开发库：FFmpeg"><a href="#二、跨平台开发库：FFmpeg" class="headerlink" title="二、跨平台开发库：FFmpeg"></a>二、跨平台开发库：<a href="https://ffmpeg.org/">FFmpeg</a></h4><ul><li><p>音视频开发选择基于C语言的FFmpeg</p></li><li><p>GUI图形界面的开发选择基于C++的Qt(QtCreator)</p><hr></li></ul><h4 id="三、Mac环境配置"><a href="#三、Mac环境配置" class="headerlink" title="三、Mac环境配置"></a>三、Mac环境配置</h4><h5 id="1-FFmpeg安装"><a href="#1-FFmpeg安装" class="headerlink" title="1. FFmpeg安装"></a>1. FFmpeg安装</h5><blockquote><ul><li><p>在Mac环境中，直接使用Homebrew安装FFmpeg即可:  brew install ffmpeg</p></li><li><p>FFmpeg版本查看: ffmpeg -version</p></li><li><p>目录结构：</p><ol><li><p>通过brew install安装的软件会存放到 /usr/local/Cellar 目录中，通过以下命令可以打开FFmpeg的安装目录：</p><blockquote><p>cd /usr/local/Cellar/ffmpeg</p></blockquote></li><li><p>bin：有编译好的可执行程序：ffmpeg、ffplay等，可以直接在命令行上使用，比如:</p><blockquote><p> ffplay xx.mp4：可以直接播放某个视频</p><p>ffmpeg -version：可以查看FFmpeg的版本号</p></blockquote></li><li><p>include：开发时需要包含的头文件</p></li><li><p>lib：链接时需要用到的库文件</p></li></ol></li></ul></blockquote><h5 id="2-Qt安装"><a href="#2-Qt安装" class="headerlink" title="2. Qt安装"></a>2. Qt安装</h5><blockquote><ul><li><p>通过<em>brew install</em>安装Qt，最终被安装在/usr/local/Cellar/qt目录: </p><blockquote><p>brew install qt</p></blockquote></li><li><p>通过<em>brew install –cask</em>安装Qt Creator，最终被安装在/usr/local/Caskroom/qt-creator目录</p><blockquote><p>brew install –cask qt-creator</p></blockquote></li><li><p>相关配置：通过brew安装的Qt和Qt Creator是分开的，需要在Qt Creator中设置一下Qt的路径</p></li></ul></blockquote><h5 id="3-开发"><a href="#3-开发" class="headerlink" title="3. 开发"></a>3. 开发</h5>]]></content>
+      
+      
+      <categories>
+          
+          <category> iOS </category>
+          
+          <category> iOS音视频开发 </category>
+          
+          <category> FFmpeg </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> iOS, FFmpeg </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
     
     
     
@@ -35,11 +64,11 @@
     
     
     <entry>
-      <title>iOS音视频开发（一）重识图片、声音与视频</title>
+      <title>iOS音视频开发（一）重识图片</title>
       <link href="/2021/08/04/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%80/"/>
       <url>/2021/08/04/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%80/</url>
       
-        <content type="html"><![CDATA[<h4 id="一-图片"><a href="#一-图片" class="headerlink" title="一. 图片"></a>一. 图片</h4><blockquote><ul><li><p>每张图片都有N个像素组成（N&gt;=1）</p></li><li><p>如果一张图片的分辨率是W x H, 那么：</p></li></ul><ol><li><p>每一行都有W个像素，共有H行，总计W*H个像素</p></li><li><p>宽度是W像素，高度是H像素</p></li></ol><ul><li>每一个像素都有其独立的颜色！！！</li></ul></blockquote><hr><h4 id="二、RGB颜色模型"><a href="#二、RGB颜色模型" class="headerlink" title="二、RGB颜色模型"></a>二、RGB颜色模型</h4><blockquote><ul><li>RGB Color Model: RGB颜色模型（三原色 光模式）</li></ul><ol><li>R+G=Y</li><li>R+B=Magenta洋红色</li><li>G+B=Cyan青色[saɪæn]</li><li>R+G+B=W</li></ol></blockquote><p>思考：每一个像素的颜色信息是符合存储的？</p><blockquote><ul><li><p>位深度Bit Depth == 色彩深度（色深）Color Depth</p></li><li><p><strong>如果一张图片的位深度位n，那么它的每一个像素都会使用n个二进制位来存储颜色信息！！</strong></p></li><li><p>常见位深度是：24 ,表示每一个像素都会使用24个二进制位来存储颜色信息；</p></li><li><p>因为每一个像素的颜色都是用R、G、B这3个<strong>颜色通道</strong>合成的；</p></li><li><p>每个颜色通道都用8bit（位）表示其“含量”值（范围0000 0000 — 1111 1111，即0-255或00-FF）：</p><table><thead><tr><th align="center">颜色</th><th align="center">rgb表示</th><th align="center">十六进制表示</th></tr></thead><tbody><tr><td align="center">红色</td><td align="center">rgb(255,0,0)</td><td align="center">#ff0000</td></tr><tr><td align="center">绿色</td><td align="center">rgb(0,255,0)</td><td align="center">#00ff00</td></tr><tr><td align="center">蓝色</td><td align="center">rgb(0,0,255)</td><td align="center">#0000ff</td></tr><tr><td align="center">黄色</td><td align="center">rgb(255,255,0)</td><td align="center">#ffff00</td></tr><tr><td align="center">洋红色</td><td align="center">rgb(255,0,255)</td><td align="center">#ff00ff</td></tr><tr><td align="center">青色</td><td align="center">rgb(0,255,255)</td><td align="center">#00ffff</td></tr><tr><td align="center">白色</td><td align="center">rgb(255,255,255)</td><td align="center">#ffffff</td></tr><tr><td align="center">黑色</td><td align="center">rgb(0,0,0)</td><td align="center">#000000</td></tr></tbody></table></li></ul></blockquote><hr><h4 id="三、图片格式："><a href="#三、图片格式：" class="headerlink" title="三、图片格式："></a>三、图片格式：</h4><blockquote><p>位图与矢量图的区别：</p><p>分辨率：位图的质量与分辨率有关。而矢量图的质量与分辨率没有任何关系。</p><p>绘图工具：矢量图一般是用Adobe公司的Illustrator，而位图则使用的是Photoshop和Windows系统所自带的画图。</p><p>性质：位图是由像素所组成的点阵图像，矢量图是使用直线和曲线来描述图形。</p></blockquote><ol><li><p>png、jpg、gif三种格式称为位图</p></li><li><p>svg：矢量图</p><blockquote><ul><li><p>图片大小的计算：</p></li><li><p>理论值：</p><p>24位深度下，每个像素占3个字节，按kb计算: 像素<em>字节 =  (50 * 60 )</em> ( 24 / 8 ) = 9000b = 8.79kb(9000b/1024)</p></li></ul></blockquote></li></ol><hr>]]></content>
+        <content type="html"><![CDATA[<h4 id="一-图片"><a href="#一-图片" class="headerlink" title="一. 图片"></a>一. 图片</h4><blockquote><ul><li><p>每张图片都有N个像素组成（N&gt;=1）</p></li><li><p>如果一张图片的分辨率是W x H, 那么：</p></li></ul><ol><li><p>每一行都有W个像素，共有H行，总计W*H个像素</p></li><li><p>宽度是W像素，高度是H像素</p></li></ol><ul><li>每一个像素都有其独立的颜色！！！</li></ul></blockquote><hr><h4 id="二、RGB颜色模型"><a href="#二、RGB颜色模型" class="headerlink" title="二、RGB颜色模型"></a>二、RGB颜色模型</h4><p><img src="/2021/08/04/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%80/rgbColors.png" alt="&quot;RGB颜色模型&quot;"></p><blockquote><ul><li>RGB Color Model: RGB颜色模型（三原色 光模式）</li></ul><ol><li>R+G=Y</li><li>R+B=Magenta洋红色</li><li>G+B=Cyan青色[saɪæn]</li><li>R+G+B=W</li></ol></blockquote><p>思考：每一个像素的颜色信息是符合存储的？</p><blockquote><ul><li><p>位深度Bit Depth == 色彩深度（色深）Color Depth</p></li><li><p><strong>如果一张图片的位深度位n，那么它的每一个像素都会使用n个二进制位来存储颜色信息！！</strong></p></li><li><p>常见位深度是：24 ,表示每一个像素都会使用24个二进制位来存储颜色信息；</p></li><li><p>因为每一个像素的颜色都是用R、G、B这3个<strong>颜色通道</strong>合成的；</p></li><li><p>每个颜色通道都用8bit（位）表示其“含量”值（范围0000 0000 — 1111 1111，即0-255或00-FF）：</p><table><thead><tr><th align="center">颜色</th><th align="center">rgb表示</th><th align="center">十六进制表示</th></tr></thead><tbody><tr><td align="center">红色</td><td align="center">rgb(255,0,0)</td><td align="center">#ff0000</td></tr><tr><td align="center">绿色</td><td align="center">rgb(0,255,0)</td><td align="center">#00ff00</td></tr><tr><td align="center">蓝色</td><td align="center">rgb(0,0,255)</td><td align="center">#0000ff</td></tr><tr><td align="center">黄色</td><td align="center">rgb(255,255,0)</td><td align="center">#ffff00</td></tr><tr><td align="center">洋红色</td><td align="center">rgb(255,0,255)</td><td align="center">#ff00ff</td></tr><tr><td align="center">青色</td><td align="center">rgb(0,255,255)</td><td align="center">#00ffff</td></tr><tr><td align="center">白色</td><td align="center">rgb(255,255,255)</td><td align="center">#ffffff</td></tr><tr><td align="center">黑色</td><td align="center">rgb(0,0,0)</td><td align="center">#000000</td></tr></tbody></table></li></ul></blockquote><hr><h4 id="三、图片格式："><a href="#三、图片格式：" class="headerlink" title="三、图片格式："></a>三、图片格式：</h4><blockquote><p>位图与矢量图的区别：</p><p>分辨率：位图的质量与分辨率有关。而矢量图的质量与分辨率没有任何关系。</p><p>绘图工具：矢量图一般是用Adobe公司的Illustrator，而位图则使用的是Photoshop和Windows系统所自带的画图。</p><p>性质：位图是由像素所组成的点阵图像，矢量图是使用直线和曲线来描述图形。</p></blockquote><ol><li><p>png、jpg、gif三种格式称为位图</p></li><li><p>svg：矢量图</p><blockquote><ul><li><p>图片大小的计算：</p></li><li><p>理论值：</p><p>24位深度下，每个像素占3个字节，按kb计算: 像素<em>字节 =  (50 * 60 )</em> ( 24 / 8 ) = 9000b = 8.79kb(9000b/1024)</p><p><strong>注</strong>：jpg、png、图片的实际大小都小于理论计算值，因为他们都是经过算法压缩过的图片。</p></li></ul></blockquote></li><li><p>图片的压缩格式</p><ul><li>无损压缩：解压(显示时)后能够还原图片的原始数据：不损失图片质量；压缩率底，图片体积大</li><li>有损压缩：损失图片质量；压缩率高，图片体积小</li></ul><table><thead><tr><th align="center">图片类型</th><th align="center">压缩类型</th><th align="center">位深度</th></tr></thead><tbody><tr><td align="center">JPG/JPEG</td><td align="center">有损</td><td align="center">24bit</td></tr><tr><td align="center">PNG</td><td align="center">无损</td><td align="center">8\24\32bit</td></tr><tr><td align="center">GIF</td><td align="center">无损</td><td align="center">8bit</td></tr></tbody></table></li><li><p>GIF:支持动画：实现原理类似于手翻书，即：</p><blockquote><ul><li>gif内部存储了很多帧图片</li><li>短时间内连续按顺序呈现每一帧图片就会实现动画效果</li><li>基于：视觉暂留现象（persistence of vision），延续0.1~0.4秒左右</li><li>应用：早起电影的帧率：24fps （每秒的帧数）frames per second</li></ul></blockquote></li></ol><hr>]]></content>
       
       
       <categories>
