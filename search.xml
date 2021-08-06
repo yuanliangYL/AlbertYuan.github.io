@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Undefined_symbol:_OBJC_CLASS_xxx解决方法</title>
+      <link href="/2021/08/06/Undefined-symbol-OBJC-CLASS/"/>
+      <url>/2021/08/06/Undefined-symbol-OBJC-CLASS/</url>
+      
+        <content type="html"><![CDATA[<h5 id="错误提示："><a href="#错误提示：" class="headerlink" title="错误提示："></a>错误提示：</h5><ul><li>编译时候发现错误 Undefined symbol: <em>OBJC_CLASS</em>$_xxxxxx</li></ul><h5 id="错误原因："><a href="#错误原因：" class="headerlink" title="错误原因："></a>错误原因：</h5><ul><li>xcode的tagerts中的编译文件没有加入.m或者.swift 类文件</li></ul><p><img src="/2021/08/06/Undefined-symbol-OBJC-CLASS/errorImage.png"></p><h5 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法:"></a>解决方法:</h5><ul><li>点击Targets -&gt; Build Phases -&gt; Compile Sources 下面的 + 加号，然后选择.m 或者 .swift 文件点击add,为了快速找到文件，可以在上面搜索框输入文件名</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> iOS </category>
+          
+          <category> iOS Crash Handle </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> iOS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>iOS音视频开发（二）开发库的选择及Mac环境搭建</title>
       <link href="/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/"/>
       <url>/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/</url>
