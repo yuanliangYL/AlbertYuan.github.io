@@ -1,0 +1,480 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>iOS音视频开发（四）重识音频 | Albert Yuan's Blog</title><meta name="keywords" content="iOS, FFmpeg"><meta name="author" content="Albert Yuan"><meta name="copyright" content="Albert Yuan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="我们平时在互联网上听到的声音，都是先经过录制后，再传输到互联网上的。比如歌曲、电影、主播等的声音。  PCM录音的原理可以简单理解为：把声源的振动记录下来，需要时再让某个物体按照记录下来的振动规律去振动，就会产生与原来一样的声音。   如何把声音（声源的振动）记录下来呢？声音属于模拟信号，但更便于计算机处理和存储的是数字信号（二进制编码），所以需要将模拟信号（Analog Signal）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS音视频开发（四）重识音频">
+<meta property="og:url" content="https://yuanliangyl.github.io/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/index.html">
+<meta property="og:site_name" content="Albert Yuan&#39;s Blog">
+<meta property="og:description" content="我们平时在互联网上听到的声音，都是先经过录制后，再传输到互联网上的。比如歌曲、电影、主播等的声音。  PCM录音的原理可以简单理解为：把声源的振动记录下来，需要时再让某个物体按照记录下来的振动规律去振动，就会产生与原来一样的声音。   如何把声音（声源的振动）记录下来呢？声音属于模拟信号，但更便于计算机处理和存储的是数字信号（二进制编码），所以需要将模拟信号（Analog Signal）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&refer=http%3A%2F%2Fbpic.ooopic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631154236&t=41dee32ac306672aa6785a6d138a850b">
+<meta property="article:published_time" content="2021-08-10T06:57:11.407Z">
+<meta property="article:modified_time" content="2021-08-10T06:57:26.564Z">
+<meta property="article:author" content="Albert Yuan">
+<meta property="article:tag" content="iOS, FFmpeg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&refer=http%3A%2F%2Fbpic.ooopic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631154236&t=41dee32ac306672aa6785a6d138a850b"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://yuanliangyl.github.io/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"X8NS0XSX99","apiKey":"b9d4530647c8b5bf7928a04c47752ad7","indexName":"albertyuan","hits":{"per_page":6},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'iOS音视频开发（四）重识音频',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-10 14:57:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Albert Yuan's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">iOS音视频开发（四）重识音频</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-10T06:57:11.407Z" title="发表于 2021-08-10 14:57:11">2021-08-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-10T06:57:26.564Z" title="更新于 2021-08-10 14:57:26">2021-08-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/">iOS音视频开发</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/FFmpeg/">FFmpeg</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="iOS音视频开发（四）重识音频"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><meta name="referrer" content="no-referrer">
+
+
+
+<blockquote>
+<p>我们平时在互联网上听到的声音，都是先经过录制后，再传输到互联网上的。比如歌曲、电影、主播等的声音。</p>
+</blockquote>
+<h2 id="PCM"><a href="#PCM" class="headerlink" title="PCM"></a>PCM</h2><p>录音的原理可以简单理解为：把声源的振动记录下来，需要时再让某个物体按照记录下来的振动规律去振动，就会产生与原来一样的声音。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310121149953-189520171.png" alt="记录"></p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310121152546-1765363508.png" alt="重现"></p>
+<p>如何把声音（声源的振动）记录下来呢？声音属于模拟信号，但更便于计算机处理和存储的是数字信号（二进制编码），所以需要将<strong>模拟信号</strong>（Analog Signal）转成<strong>数字信号</strong>（Digital Signal）后进行存储。这一过程，我们可以称之为：音频数字化。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310124628437-1142357612.png" alt="模拟信号与数字信号的比喻"></p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310124630934-1929901915.jpg" alt="模拟信号与数字信号的转换"></p>
+<p>将音频数字化的常见技术方案是<strong>脉冲编码调制</strong>（<strong>PCM</strong>，Pulse Code Modulation），主要过程是：采样 → 量化 → 编码。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310153043339-940528055.webp" alt="模拟信号转数字信号"></p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310153515352-366749255.png" alt="模拟信号转数字信号"></p>
+<h3 id="采样"><a href="#采样" class="headerlink" title="采样"></a>采样</h3><p>模拟信号的波形是无限光滑的，可以看成由无数个点组成，由于存储空间是相对有限的，数字编码过程中，必须要对波形的点进行采样。<strong>采样</strong>（Sampling）：每隔一段时间采集一次模拟信号的样本，是一个在时间上将模拟信号离散化（把连续信号转换成离散信号）的过程。</p>
+<h4 id="采样率"><a href="#采样率" class="headerlink" title="采样率"></a>采样率</h4><p>每秒采集的样本数量，称为<strong>采样率</strong>（采样频率，采样速率，Sampling Rate）。比如，采样率44.1kHz表示1秒钟采集44100个样本。</p>
+<h4 id="采样定理"><a href="#采样定理" class="headerlink" title="采样定理"></a>采样定理</h4><p>根据<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%87%87%E6%A0%B7%E5%AE%9A%E7%90%86">采样定理</a>（奈奎斯特–香农采样定理，Nyquist-Shannon sampling theorem）得知：只有当采样率高于声音信号最高频率的<strong>2</strong>倍时，才能把采集的声音信号唯一地还原成原来的声音。人耳能够感觉到的最高声音频率为20000Hz，因此为了满足人耳的听觉要求，需要至少每秒进行40000次采样（40kHz采样率）。这就是为什么常见的CD的采样率为44.1kHz。电话、无线对讲机、无线麦克风等的采样率是8kHZ。</p>
+<h3 id="量化"><a href="#量化" class="headerlink" title="量化"></a>量化</h3><p><strong>量化</strong>（Quantization）：将每一个采样点的样本值数字化。</p>
+<h4 id="位深度"><a href="#位深度" class="headerlink" title="位深度"></a>位深度</h4><p><strong>位深度</strong>（采样精度，采样大小，Bit Depth）：使用多少个二进制位来存储一个采样点的样本值。位深度越高，表示的振幅越精确。常见的CD采用16bit的位深度，能表示65536（2<sup>16</sup>）个不同的值。DVD使用24bit的位深度，大多数电话设备使用8bit的位深度。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210310162126093-1629151210.png" alt="不同采样率、位深度对比"></p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><p><strong>编码</strong>：将采样和量化后的数字数据转成二进制码流。</p>
+<h3 id="其他概念"><a href="#其他概念" class="headerlink" title="其他概念"></a>其他概念</h3><h4 id="声道（Channel）"><a href="#声道（Channel）" class="headerlink" title="声道（Channel）"></a>声道（Channel）</h4><p>单声道产生一组声波数据，双声道（立体声）产生两组声波数据。</p>
+<p>采样率44.1kHZ、位深度16bit的1分钟立体声PCM数据有多大？</p>
+<ul>
+<li>采样率 * 位深度 * 声道数 * 时间</li>
+<li><em>44100 * 16 * 2 * 60 / 8 ≈ 10.34MB</em></li>
+</ul>
+<p>1分钟10.34MB，这对于大部分用户来说是不能接受的。要想在不改变音频时长的前提下，降低音频数据的大小，只有2种方法：降低采样指标、压缩。降低采样指标是不可取的，会导致音频质量下降，用户体验变差，因此专家们研发了各种压缩方案。</p>
+<h4 id="比特率"><a href="#比特率" class="headerlink" title="比特率"></a>比特率</h4><p><strong>比特率</strong>（Bit Rate），指单位时间内传输或处理的比特数量，单位是：比特每秒（bit/s或bps），还有：千比特每秒（Kbit/s或Kbps）、兆比特每秒（Mbit/s或Mbps）、吉比特每秒（Gbit/s或Gbps）、太比特每秒（Tbit/s或Tbps）。</p>
+<p>采样率44.1kHZ、位深度16bit的立体声PCM数据的比特率是多少？</p>
+<ul>
+<li>采样率 * 位深度 * 声道数</li>
+<li><em>44100 * 16 * 2 = 1411.2Kbps</em></li>
+</ul>
+<p>通常，采样率、位深度越高，数字化音频的质量就越好。从比特率的计算公式可以看得出来：比特率越高，数字化音频的质量就越好。</p>
+<h4 id="信噪比"><a href="#信噪比" class="headerlink" title="信噪比"></a>信噪比</h4><p><strong>信噪比</strong>（Signal-to-noise ratio，SNR，S/N，讯噪比），指信号与噪声的比例，用于比较所需信号的强度与背景噪声的强度，以分贝（dB）为单位。</p>
+<p>位深度限制了信噪比的最大值，它们的关系如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>位深度</th>
+<th>信噪比</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>24.08</td>
+</tr>
+<tr>
+<td>8</td>
+<td>48.16</td>
+</tr>
+<tr>
+<td>11</td>
+<td>66.22</td>
+</tr>
+<tr>
+<td>12</td>
+<td>72.24</td>
+</tr>
+<tr>
+<td>16</td>
+<td>96.33</td>
+</tr>
+<tr>
+<td>18</td>
+<td>108.37</td>
+</tr>
+<tr>
+<td>20</td>
+<td>120.41</td>
+</tr>
+<tr>
+<td>24</td>
+<td>144.49</td>
+</tr>
+<tr>
+<td>32</td>
+<td>192.66</td>
+</tr>
+<tr>
+<td>48</td>
+<td>288.99</td>
+</tr>
+<tr>
+<td>64</td>
+<td>385.32</td>
+</tr>
+</tbody></table>
+<h2 id="音频的编码与解码"><a href="#音频的编码与解码" class="headerlink" title="音频的编码与解码"></a>音频的编码与解码</h2><h3 id="编码（Encode）"><a href="#编码（Encode）" class="headerlink" title="编码（Encode）"></a>编码（Encode）</h3><p>PCM数据可以理解为是：<strong>未经压缩的原始音频数据</strong>，体积比较大，为了更便于存储和传输，一般都会使用某种<strong>音频编码</strong>对它进行编码压缩，然后再存成某种<strong>音频文件格式</strong>。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210315203502644-1869060401.png" alt="编码"></p>
+<p>压缩分为<strong>无损</strong>压缩和<strong>有损</strong>压缩。</p>
+<ul>
+<li><strong>无损</strong>压缩<ul>
+<li>解压后<strong>可以</strong>完全还原出原始数据</li>
+<li>压缩比<strong>小</strong>，体积<strong>大</strong></li>
+</ul>
+</li>
+<li><strong>有损</strong>压缩<ul>
+<li>解压后<strong>不能</strong>完全还原出原始数据，会丢失一部分信息</li>
+<li>压缩比<strong>大</strong>，体积<strong>小</strong></li>
+<li>压缩比越大，丢失的信息就越多，还原后的信号失真就会越大</li>
+<li>一般是通过<strong>舍弃原始数据中对人类听觉不重要的部分</strong>，达成压缩成较小文件的目的</li>
+</ul>
+</li>
+<li>压缩比 = 未压缩大小 / 压缩后大小</li>
+</ul>
+<h3 id="解码（Decode）"><a href="#解码（Decode）" class="headerlink" title="解码（Decode）"></a>解码（Decode）</h3><p>当需要播放音频时，得先解码（解压缩）出PCM数据，然后再进行播放。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210315203603424-398158962.png" alt="解码"></p>
+<h2 id="常见的音频编码和文件格式"><a href="#常见的音频编码和文件格式" class="headerlink" title="常见的音频编码和文件格式"></a>常见的音频编码和文件格式</h2><p>需要注意的是：<strong>音频文件格式并不等于音频编码</strong>。比如：</p>
+<ul>
+<li><p><strong>WAV</strong>只是一种文件格式，并不是一种编码</p>
+</li>
+<li><p><strong>FLAC</strong>既是一种文件格式，又是一种编码</p>
+</li>
+</ul>
+<p>下面对常见的音频编码和文件格式做一个简介，以后有需要时再进行详细介绍。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>无损压缩</th>
+<th>文件扩展名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Monkey’s Audio</td>
+<td>✔️</td>
+<td>.ape</td>
+</tr>
+<tr>
+<td>FLAC（Free Lossless Audio Codec）</td>
+<td>✔️</td>
+<td>.flac</td>
+</tr>
+<tr>
+<td>ALAC（Apple Lossless Audio Codec）</td>
+<td>✔️</td>
+<td>.m4a/.caf</td>
+</tr>
+<tr>
+<td>MP3（MPEG Audio Layer III）</td>
+<td>❌</td>
+<td>.mp3</td>
+</tr>
+<tr>
+<td>WMA（Windows Media Audio）</td>
+<td>❌</td>
+<td>.wma</td>
+</tr>
+<tr>
+<td>AAC（Advanced Audio Coding）</td>
+<td>❌</td>
+<td>.acc/.mp4/.m4a</td>
+</tr>
+<tr>
+<td>Vorbis</td>
+<td>❌</td>
+<td>.ogg</td>
+</tr>
+<tr>
+<td>Speex</td>
+<td>❌</td>
+<td>.spx</td>
+</tr>
+<tr>
+<td>Opus</td>
+<td>❌</td>
+<td>.opus</td>
+</tr>
+<tr>
+<td>Ogg</td>
+<td></td>
+<td>.ogg</td>
+</tr>
+<tr>
+<td>WAV（Waveform Audio File Format）</td>
+<td></td>
+<td>.wav</td>
+</tr>
+<tr>
+<td>AIFF（Audio Interchange File Format）</td>
+<td></td>
+<td>.aiff、.aif</td>
+</tr>
+</tbody></table>
+<h3 id="无损"><a href="#无损" class="headerlink" title="无损"></a>无损</h3><h4 id="Monkey’s-Audio"><a href="#Monkey’s-Audio" class="headerlink" title="Monkey’s Audio"></a>Monkey’s Audio</h4><p>Monkey’s Audio，是一种<strong>无损</strong>的音频编码和文件格式，文件扩展名为**.ape**，压缩率一般在55%左右。</p>
+<h4 id="FLAC"><a href="#FLAC" class="headerlink" title="FLAC"></a>FLAC</h4><p>FLAC（Free Lossless Audio Codec），是一种<strong>无损</strong>的音频编码和文件格式，文件扩展名为**.flac**。虽然压缩率稍有不及Monkey’s Audio，但FLAC技术更先进，占用资源更低，有更多的平台及硬件产品支持FLAC。</p>
+<h4 id="ALAC"><a href="#ALAC" class="headerlink" title="ALAC"></a>ALAC</h4><p>ALAC（Apple Lossless Audio Codec），是由Apple开发的一种<strong>无损</strong>的音频编码，文件扩展名为**.m4a<strong>、</strong>.caf**。</p>
+<h3 id="有损"><a href="#有损" class="headerlink" title="有损"></a>有损</h3><h4 id="MP3"><a href="#MP3" class="headerlink" title="MP3"></a>MP3</h4><p>MP3（MPEG Audio Layer III），是非常流行的一种<strong>有损</strong>音频编码和文件格式，文件扩展名为**.mp3**。</p>
+<ul>
+<li>第1版是：MPEG-1 Audio Layer III，属于国际标准<a target="_blank" rel="noopener" href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=22412">ISO/IEC 11172-3</a></li>
+<li>第2版是：MPEG-2 Audio Layer III，属于国际标准<a target="_blank" rel="noopener" href="http://www.iso.org/iso/iso_catalogue/catalogue_ics/catalogue_detail_ics.htm?csnumber=26797">ISO/IEC 13818-3</a></li>
+<li>第3版是：MPEG-2.5 Audio Layer III，并不是由MPEG官方开发的，不是公认的标准</li>
+</ul>
+<h4 id="WMA"><a href="#WMA" class="headerlink" title="WMA"></a>WMA</h4><p>WMA（Windows Media Audio），是由Microsoft开发的音频编码和文件格式，文件扩展名为**.wma**。包括4种类型：</p>
+<ul>
+<li>WMA：原始的WMA编解码器，作为MP3的竞争者，属于<strong>有损</strong>音频编码</li>
+<li>WMA Pro：支持更多声道和更高质量的音频，属于<strong>有损</strong>音频编码</li>
+<li>WMA Lossless：属于<strong>无损</strong>音频编码</li>
+<li>WMA Voice：属于<strong>有损</strong>音频编码</li>
+</ul>
+<h4 id="AAC"><a href="#AAC" class="headerlink" title="AAC"></a>AAC</h4><p>AAC（Advanced Audio Coding），是由Fraunhofer IIS、杜比实验室、AT&amp;T、Sony、Nokia等公司共同开发的<strong>有损</strong>音频编码和文件格式，压缩比通常为18:1。</p>
+<p>AAC被设计为MP3格式的后继产品，通常在相同的比特率下可以获得比MP3更高的声音质量，是iPhone、iPod、iPad、iTunes的标准音频格式。</p>
+<p>AAC编码的文件扩展名主要有3种：</p>
+<ul>
+<li><strong>.acc</strong>：传统的AAC编码，使用MPEG-2 Audio Transport Stream（ADTS）容器</li>
+<li><strong>.mp4</strong>：使用了MPEG-4 Part 14的简化版即3GPP Media Release 6 Basic（3gp6）进行封装的AAC编码</li>
+<li><strong>.m4a</strong>：为了区别纯音频MP4文件和包含视频的MP4文件而由Apple公司使用的扩展名<ul>
+<li>Apple iTunes对纯音频MP4文件采用了**.m4a**文件扩展名</li>
+<li>M4A的本质和音频MP4相同，故音频MP4文件可以直接更改文件扩展名为**.m4a**</li>
+</ul>
+</li>
+</ul>
+<h4 id="Vorbis"><a href="#Vorbis" class="headerlink" title="Vorbis"></a>Vorbis</h4><p>Vorbis，是由Xiph.Org基金会开发的一种<strong>有损</strong>音频编码。通常以Ogg作为容器格式，所以常合称为Ogg Vorbis，文件扩展名为**.ogg**。</p>
+<h4 id="Speex"><a href="#Speex" class="headerlink" title="Speex"></a>Speex</h4><p>Speex，是由Xiph.Org基金会开发的一种<strong>有损</strong>音频编码和文件格式，文件扩展名为**.spx**。</p>
+<h4 id="Opus"><a href="#Opus" class="headerlink" title="Opus"></a>Opus</h4><p>Opus，是由Xiph.Org基金会开发的一种<strong>有损</strong>音频编码和文件格式，文件扩展名为**.opus**。用以取代Vorbis和Speedx。经过多次盲听测试，在任何给定的比特率下都比其他标准音频格式具有更高的质量，包括MP3、AAC。</p>
+<h3 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h3><h4 id="Ogg"><a href="#Ogg" class="headerlink" title="Ogg"></a>Ogg</h4><p>Ogg是一种多媒体文件格式，由Xiph.Org基金会所维护，可以纳入各式各样的音视频编码（音频、视频都可以），文件扩展名常为**.ogg**。</p>
+<p>Ogg常用的音频编码有：</p>
+<ul>
+<li>有损压缩：Speex、Vorbis、Opus</li>
+<li>无损压缩：FLAC</li>
+<li>未压缩：PCM</li>
+</ul>
+<h4 id="WAV"><a href="#WAV" class="headerlink" title="WAV"></a>WAV</h4><p>WAV（Waveform Audio File Format），是由IBM和Microsoft开发的音频文件格式，扩展名是**.wav**，通常采用PCM编码，常用于Windows系统中。</p>
+<p><a target="_blank" rel="noopener" href="http://soundfile.sapp.org/doc/WaveFormat/">WAV的文件格式</a>如下图所示，前面有44个字节的文件头，紧跟在后面的就是音频数据（比如PCM数据）。</p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210311190649736-42996929.gif" alt="WAV文件格式"></p>
+<p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://img2020.cnblogs.com/blog/497279/202103/497279-20210311190654247-121239230.gif" alt="WAV文件格式"></p>
+<ul>
+<li>NumChannels：声道数</li>
+<li>SampleRate：采样率（Hz）</li>
+<li>ByteRate：每秒多少个字节（Byte/s）</li>
+<li>BitsPerSample：位深度</li>
+</ul>
+<h4 id="AIFF"><a href="#AIFF" class="headerlink" title="AIFF"></a>AIFF</h4><p>AIFF（Audio Interchange File Format），由Apple开发的音频文件格式，扩展名是**.aiff<strong>、</strong>.aif**。跟WAV一样，通常采用PCM编码，常用于Mac系统中。</p>
+<h3 id="有损和无损"><a href="#有损和无损" class="headerlink" title="有损和无损"></a>有损和无损</h3><p>根据采样率和位深度可以得知：相对于自然界的信号，音频编码最多只能做到无限接近，任何数字音频编码方案都是有损的，因为无法完全还原。目前能够达到最高保真水平的就是PCM编码，因此，PCM约定俗成叫做<strong>无损</strong>音频编码，被广泛用于素材保存及音乐欣赏，CD、DVD以及常见的<strong>WAV</strong>文件中均有应用。</p>
+<p>但并不意味着PCM就能够确保信号绝对保真，PCM也只能做到最大程度的无限接近。我们习惯性的把MP3列入<strong>有损</strong>音频编码范畴，是相对于PCM编码的。要做到真正的无损是困难的，就像用数字去表达圆周率，不管精度多高，也只是无限接近，而不是真正等于圆周率的值。</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mjios/p/14466420.html">转自：M了个J—【秒懂音视频开发】03_重识音频 https://www.cnblogs.com/mjios/p/14466420.html</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Albert Yuan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://yuanliangyl.github.io/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/">https://yuanliangyl.github.io/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://yuanliangyl.github.io" target="_blank">Albert Yuan's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/iOS-FFmpeg/">iOS, FFmpeg</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%89Qt%E5%9F%BA%E7%A1%80/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D58e2c752718b4710ce2ffdccf3cec3b2%2Fac4bd11373f08202b8ecae4c48fbfbedab641b42.jpg&amp;refer=http%3A%2F%2Fimgsa.baidu.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631169901&amp;t=f2413d6f3a43f8af71618af5619791e2" onerror="onerror=null;src='/img/404.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">iOS音视频开发（三）Qt基础</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/10/iOS音视频开发/iOS音视频开发三Qt基础/" title="iOS音视频开发（三）Qt基础"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D58e2c752718b4710ce2ffdccf3cec3b2%2Fac4bd11373f08202b8ecae4c48fbfbedab641b42.jpg&refer=http%3A%2F%2Fimgsa.baidu.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631169901&t=f2413d6f3a43f8af71618af5619791e2" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-10</div><div class="title">iOS音视频开发（三）Qt基础</div></div></a></div><div><a href="/2021/08/05/iOS音视频开发/iOS音视频开发二/" title="iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic2.zhimg.com%2Fv2-e68872d834e22ac7b0ed48495df14280_1440w.jpg%3Fsource%3D172ae18b&refer=http%3A%2F%2Fpic2.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630748168&t=1494cc8c3e460d9da07715309293b0b9" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-05</div><div class="title">iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Albert Yuan</div><div class="author-info__description">博学之,审问之,慎思之,明辨之,笃行之</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yuanliangYL"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yuanliangYL" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:yuanliangios@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">love cat , love life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PCM"><span class="toc-text">PCM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%87%E6%A0%B7"><span class="toc-text">采样</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E7%8E%87"><span class="toc-text">采样率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%87%E6%A0%B7%E5%AE%9A%E7%90%86"><span class="toc-text">采样定理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8F%E5%8C%96"><span class="toc-text">量化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8D%E6%B7%B1%E5%BA%A6"><span class="toc-text">位深度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81"><span class="toc-text">编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%A6%82%E5%BF%B5"><span class="toc-text">其他概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A3%B0%E9%81%93%EF%BC%88Channel%EF%BC%89"><span class="toc-text">声道（Channel）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AF%94%E7%89%B9%E7%8E%87"><span class="toc-text">比特率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%A1%E5%99%AA%E6%AF%94"><span class="toc-text">信噪比</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9F%B3%E9%A2%91%E7%9A%84%E7%BC%96%E7%A0%81%E4%B8%8E%E8%A7%A3%E7%A0%81"><span class="toc-text">音频的编码与解码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%EF%BC%88Encode%EF%BC%89"><span class="toc-text">编码（Encode）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E7%A0%81%EF%BC%88Decode%EF%BC%89"><span class="toc-text">解码（Decode）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9F%B3%E9%A2%91%E7%BC%96%E7%A0%81%E5%92%8C%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-text">常见的音频编码和文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%8D%9F"><span class="toc-text">无损</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Monkey%E2%80%99s-Audio"><span class="toc-text">Monkey’s Audio</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FLAC"><span class="toc-text">FLAC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ALAC"><span class="toc-text">ALAC</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%8D%9F"><span class="toc-text">有损</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MP3"><span class="toc-text">MP3</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WMA"><span class="toc-text">WMA</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AAC"><span class="toc-text">AAC</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Vorbis"><span class="toc-text">Vorbis</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Speex"><span class="toc-text">Speex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Opus"><span class="toc-text">Opus</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-text">文件格式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Ogg"><span class="toc-text">Ogg</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#WAV"><span class="toc-text">WAV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AIFF"><span class="toc-text">AIFF</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%8D%9F%E5%92%8C%E6%97%A0%E6%8D%9F"><span class="toc-text">有损和无损</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/Swift/swift%E7%B1%BB%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93/" title="swift类与结构体"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20161021%2F507e965b886449f08e7049101c059f98_th.jpg&amp;refer=http%3A%2F%2Fimg.mp.itc.cn&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631171397&amp;t=de686eb31993946450998d07098fbb40" onerror="this.onerror=null;this.src='/img/404.gif'" alt="swift类与结构体"/></a><div class="content"><a class="title" href="/2021/08/10/Swift/swift%E7%B1%BB%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93/" title="swift类与结构体">swift类与结构体</a><time datetime="2021-08-10T08:10:56.558Z" title="更新于 2021-08-10 16:10:56">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/" title="iOS音视频开发（四）重识音频"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS音视频开发（四）重识音频"/></a><div class="content"><a class="title" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/" title="iOS音视频开发（四）重识音频">iOS音视频开发（四）重识音频</a><time datetime="2021-08-10T06:57:26.564Z" title="更新于 2021-08-10 14:57:26">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/04/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%80/" title="iOS音视频开发（一）重识图片"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.dnzhuti.com%2Fuploads%2Fallimg%2F170802%2F95-1FP21IP9.jpg&amp;refer=http%3A%2F%2Fwww.dnzhuti.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630823248&amp;t=1e557f89835b75c0f8c363fdc35e7652" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS音视频开发（一）重识图片"/></a><div class="content"><a class="title" href="/2021/08/04/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%80/" title="iOS音视频开发（一）重识图片">iOS音视频开发（一）重识图片</a><time datetime="2021-08-10T06:55:42.511Z" title="更新于 2021-08-10 14:55:42">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%89Qt%E5%9F%BA%E7%A1%80/" title="iOS音视频开发（三）Qt基础"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimgsa.baidu.com%2Fexp%2Fw%3D500%2Fsign%3D58e2c752718b4710ce2ffdccf3cec3b2%2Fac4bd11373f08202b8ecae4c48fbfbedab641b42.jpg&amp;refer=http%3A%2F%2Fimgsa.baidu.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631169901&amp;t=f2413d6f3a43f8af71618af5619791e2" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS音视频开发（三）Qt基础"/></a><div class="content"><a class="title" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%B8%89Qt%E5%9F%BA%E7%A1%80/" title="iOS音视频开发（三）Qt基础">iOS音视频开发（三）Qt基础</a><time datetime="2021-08-10T06:45:19.898Z" title="更新于 2021-08-10 14:45:19">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/09/iOS%E5%8A%A8%E7%94%BB/%E5%9B%BE%E5%BD%A2%E5%87%A0%E4%BD%95%E5%AD%A6/" title="iOS CoreAnimation(核心动画三)图形几何学"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg95.699pic.com%2Fxsj%2F0q%2Fcy%2F3y.jpg%21%2Ffw%2F700%2Fwatermark%2Furl%2FL3hzai93YXRlcl9kZXRhaWwyLnBuZw%2Falign%2Fsoutheast&amp;refer=http%3A%2F%2Fimg95.699pic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS CoreAnimation(核心动画三)图形几何学"/></a><div class="content"><a class="title" href="/2021/08/09/iOS%E5%8A%A8%E7%94%BB/%E5%9B%BE%E5%BD%A2%E5%87%A0%E4%BD%95%E5%AD%A6/" title="iOS CoreAnimation(核心动画三)图形几何学">iOS CoreAnimation(核心动画三)图形几何学</a><time datetime="2021-08-10T06:38:55.371Z" title="更新于 2021-08-10 14:38:55">2021-08-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Albert Yuan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcom to my  blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/algolia.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'REc8eytE1gJDl3d8FkudLNlL-gzGzoHsz',
+      appKey: 'gGO3y8I9oVlc4Cd5N1fizNPW',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="255,0,0" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
