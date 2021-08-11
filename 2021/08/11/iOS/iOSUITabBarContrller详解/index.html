@@ -1,0 +1,333 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>iOSUITabBarContrller详解与使用 | Albert Yuan's Blog</title><meta name="keywords" content="ios"><meta name="author" content="Albert Yuan"><meta name="copyright" content="Albert Yuan"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、UITabBarController简介 UITabBarController - 选项卡控制器，与导航控制器一样，也被广泛用于各种ios应用程序。顾名思义，选项卡控制器在屏幕底部显示一系列“选显卡”，这些选项卡表示为图标和文本，用户触摸它们将在不同的场景间切换。和UINavigationController类似，UITabBarController也可以用来控制多个页面导航，用户可以在多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOSUITabBarContrller详解与使用">
+<meta property="og:url" content="https://yuanliangyl.github.io/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="Albert Yuan&#39;s Blog">
+<meta property="og:description" content="一、UITabBarController简介 UITabBarController - 选项卡控制器，与导航控制器一样，也被广泛用于各种ios应用程序。顾名思义，选项卡控制器在屏幕底部显示一系列“选显卡”，这些选项卡表示为图标和文本，用户触摸它们将在不同的场景间切换。和UINavigationController类似，UITabBarController也可以用来控制多个页面导航，用户可以在多">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&refer=http%3A%2F%2Fimages2015.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631242411&t=6c8a605550b8da493ae89b30e55f1a65">
+<meta property="article:published_time" content="2021-08-11T02:50:04.442Z">
+<meta property="article:modified_time" content="2021-08-11T06:50:17.785Z">
+<meta property="article:author" content="Albert Yuan">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&refer=http%3A%2F%2Fimages2015.cnblogs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631242411&t=6c8a605550b8da493ae89b30e55f1a65"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://yuanliangyl.github.io/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.10.5/dist/instantsearch.min.js" defer></script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"X8NS0XSX99","apiKey":"b9d4530647c8b5bf7928a04c47752ad7","indexName":"albertyuan","hits":{"per_page":6},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容：${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: true,
+  isanchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'iOSUITabBarContrller详解与使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-11 14:50:17'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const fontSizeVal = saveToLocal.get('global-font-size')
+    if (fontSizeVal !== undefined) {
+      document.documentElement.style.setProperty('--global-font-size', fontSizeVal + 'px')
+    }
+    
+    const detectApple = () => {
+      if (GLOBAL_CONFIG_SITE.isHome && /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/favicon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&amp;refer=http%3A%2F%2Fimages2015.cnblogs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631242411&amp;t=6c8a605550b8da493ae89b30e55f1a65')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Albert Yuan's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">iOSUITabBarContrller详解与使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-11T02:50:04.442Z" title="发表于 2021-08-11 10:50:04">2021-08-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-11T06:50:17.785Z" title="更新于 2021-08-11 14:50:17">2021-08-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/">iOS</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/iOS/Objective-c/">Objective-c</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="iOSUITabBarContrller详解与使用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><meta name="referrer" content="no-referrer">
+
+<h3 id="一、UITabBarController简介"><a href="#一、UITabBarController简介" class="headerlink" title="一、UITabBarController简介"></a>一、UITabBarController简介</h3><blockquote>
+<p>UITabBarController - 选项卡控制器，与导航控制器一样，也被广泛用于各种ios应用程序。顾名思义，选项卡控制器在屏幕底部显示一系列“选显卡”，这些选项卡表示为图标和文本，用户触摸它们将在不同的场景间切换。和UINavigationController类似，UITabBarController也可以用来控制多个页面导航，用户可以在多个视图控制器之间移动，并可以定制屏幕底部的选项卡栏。<br> 借助屏幕底部的选项卡栏，UITabBarController不必像UINavigationController那样以栈的方式推入和推出视图，而是建立一系列的控制器（这些控制器可以是UIViewController、UINavigationController、UITableViewController等）并将它们添加到选项卡栏，使每个选项卡对应一个控制器。每个场景都呈现了应用程序的一项功能，或是提供了一种查看应用程序的独特方式。</p>
+</blockquote>
+<hr>
+<h3 id="二、UITabBarController的原理"><a href="#二、UITabBarController的原理" class="headerlink" title="二、UITabBarController的原理"></a>二、UITabBarController的原理</h3><blockquote>
+<ul>
+<li><p>当UITabBarController做为Window的根控制器时，程序一启动，UITabBarController就会一次性初始化所有子控制器，但是默认只加载第一个控制器视图，其他视图控制器只初始化，但默认不会加载，只有在需要显示的时候才调用loadView方法加载。特殊情况：在AppDelegate中设置其他的子控制器视图的背景颜色，就会提前加载该控制器视图，但不显示该视图。</p>
+</li>
+<li><p>每一个控制器视图只加载一次，就会一直存在内存中，当切换子控制器时直接显示，不显示在屏幕上的子控制器不会被销毁。当遇到内存警告时，会释放掉没有加载的子控制器。</p>
+</li>
+<li><p>每个视图控制器都有一个tabBarController属性，通过它可以访问所在的UITabBarController，而且对于UITabBarController的直接子视图，其tabBarController属性相当于它的父视图parentViewController。</p>
+</li>
+<li><p>每个视图控制器都有一个tabBarItem属性，通过它控制视图在UITabBarController的tabBar中的显示信息</p>
+</li>
+<li><p>tabBarItem的image属性必须是png格式(建议大小32*32)，并且打开alpha通道否则无法正常显示。</p>
+</li>
+<li><p>当往UITabBarController添加子控制器，标签栏就会有序的自动生成对应的UITabBarButton对象，有多少个子控制器，标签栏就有多少个UITabBarButton对象，但是子控制器的数量超过5个的时候，标签栏上的第五个UITabBarButton对象就会显示成”More”类型的按钮。</p>
+</li>
+</ul>
+</blockquote>
+<p>其他注意点：</p>
+<blockquote>
+<ol>
+<li>UITabBarController没有根控制器的概念。在添加了相同的子控制器，不会增加tabitem的数量。子控器可以是UIViewController、UINavigationController、UITableViewController或者其他的视图控制器</li>
+<li>UITabBarButton在UITabBar中的位置是均分的，UITabBar的高度为49，UITabBarButton⾥面显⽰什么内容，由对应子控制器的tabBarItem属性来决定</li>
+<li>UITabBarController一般作为应用程序的rootViewController，但是它不能作为UINavigationController的根控制器</li>
+<li>UITabBarController默认只支持竖屏，当设备方向放生变化时候，它会查询viewControllers属性中包含的所有ViewController，仅当所有的viewController都支持该方向时，UITabBarController才会发生旋转，否则默认的竖向</li>
+<li>UITabBar继承于UIView，方便用户切换到对应的界面，当往标签控制器里添加子控制器，标签栏就会有序的自动生成对应的标签；创建一个标签控制器，就默认创建一个标签栏，标签栏最多显示5个标签</li>
+</ol>
+</blockquote>
+<hr>
+<h3 id="三、UI结构与源码结构图解"><a href="#三、UI结构与源码结构图解" class="headerlink" title="三、UI结构与源码结构图解"></a>三、UI结构与源码结构图解</h3><p><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/2.png"></p>
+<hr>
+<h3 id="四、基本使用"><a href="#四、基本使用" class="headerlink" title="四、基本使用"></a>四、基本使用</h3><h6 id="基本使用流程："><a href="#基本使用流程：" class="headerlink" title="基本使用流程："></a>基本使用流程：</h6><ol>
+<li>初始化UITabBarController</li>
+<li>设置UIWindow的rootViewController为UITabBarController</li>
+<li>创建相应的子控制器（viewcontroller）</li>
+<li>把子控制器添加到UITabBarController</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-(void)useSystemTabBarControoler&#123;</span><br><span class="line">    // 创建窗口</span><br><span class="line">     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];</span><br><span class="line">    //1 创建标签控制器</span><br><span class="line">    UITabBarController *tabBarC = [[UITabBarController alloc] init];</span><br><span class="line">    //2 设置窗口的根控制器为标签控制器</span><br><span class="line">    self.window.rootViewController = tabBarC;</span><br><span class="line">    // 显示窗口</span><br><span class="line">    [self.window makeKeyAndVisible];</span><br><span class="line"></span><br><span class="line">    //3 创建相应的子控制器</span><br><span class="line">    ViewController *v1 = [[ViewController alloc] init];</span><br><span class="line">    v1.tabBarItem.title = @&quot;首页&quot;;</span><br><span class="line">    v1.tabBarItem.selectedImage = [UIImage imageNamed:@&quot;&quot;];</span><br><span class="line">    v1.tabBarItem.badgeValue = @&quot;10&quot;;</span><br><span class="line"></span><br><span class="line">    ViewController *v2 = [[ViewController alloc] init];</span><br><span class="line">    UINavigationController *nav2 = [[UINavigationController alloc] initWithRootViewController:v2];</span><br><span class="line">    nav2.tabBarItem.title = @&quot;我的&quot;;</span><br><span class="line">    nav2.tabBarItem.selectedImage = [UIImage imageNamed:@&quot;&quot;];</span><br><span class="line">   </span><br><span class="line">    //4 把子控制器添加到UITabBarController</span><br><span class="line">    tabBarC.viewControllers = @[v1,nav2];</span><br><span class="line"></span><br><span class="line">    // 设置标签栏的背景图片</span><br><span class="line">     tabBarC.tabBar.backgroundImage = [UIImage imageNamed:@&quot;Snip20160825_2&quot;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>该方式的弊端：</p>
+<ul>
+<li>添加子控制器的代码暴露在了外面</li>
+</ul>
+<hr>
+<h3 id="五、自定义使用"><a href="#五、自定义使用" class="headerlink" title="五、自定义使用"></a>五、自定义使用</h3><h5 id="以自定义的方式实现UITabBaController"><a href="#以自定义的方式实现UITabBaController" class="headerlink" title="以自定义的方式实现UITabBaController"></a>以自定义的方式实现UITabBaController</h5><p><strong>步骤：</strong></p>
+<blockquote>
+<ul>
+<li>新建一个继承自UITabBarController的子类</li>
+<li>将这个子类设置为根控制器</li>
+<li>在这个子类里面实现添加子控制器的方法</li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">//在自定义的UITaBBarController子类中：</span><br><span class="line"></span><br><span class="line">-(void)addEachControllerWithName:(NSString *)controller</span><br><span class="line">                        andTitle:(NSString *)title</span><br><span class="line">                 andDefaultImage:(NSString *)defaultImage</span><br><span class="line">                andSelectedImage:(NSString *)selectedImage&#123;</span><br><span class="line"></span><br><span class="line">    // 添加子控制器</span><br><span class="line">    Class class = NSClassFromString(controller);</span><br><span class="line">    UIViewController *VC01 = [[class alloc] init];</span><br><span class="line"></span><br><span class="line">#pragma mark -- 文字效果设置</span><br><span class="line">    // 设置标题</span><br><span class="line">    VC01.tabBarItem.title = title;</span><br><span class="line">    //文字和图片一样是默认的蓝色，所以也要进行设置才能达到自己想要的效果</span><br><span class="line">    //方案一： 通过setTitleTextAttributes属性设置(但是这个方法很麻烦，每次设置的时候都需要写很多代码</span><br><span class="line">    // 设置文字属性</span><br><span class="line">    NSMutableDictionary * attrs = [NSMutableDictionary dictionaryWithObjectsAndKeys:</span><br><span class="line">                                   [UIFont systemFontOfSize:12.0],NSFontAttributeName,</span><br><span class="line">                                   [UIColor brownColor],NSForegroundColorAttributeName,</span><br><span class="line">                                   nil];</span><br><span class="line">    [VC01.tabBarItem setTitleTextAttributes:attrs forState:UIControlStateSelected];</span><br><span class="line">    </span><br><span class="line">#pragma mark -- 图片设置</span><br><span class="line">    // 设置默认图片</span><br><span class="line">    VC01.tabBarItem.image = [UIImage imageNamed:defaultImage];</span><br><span class="line"></span><br><span class="line">    //这种情况下因为有系统默认的蓝色渲染，会导致选中图标selectedImage不是图片原来的样子，可以通过以下两种方式解决</span><br><span class="line">    UIImage * image = [UIImage imageNamed:selectedImage];</span><br><span class="line">    //方法1 设置渲染模式 - 保持原始的渲染</span><br><span class="line">    //方法2：直接在图片文件夹的属性里面进行设置 - 将render as设置成original image</span><br><span class="line">    image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];</span><br><span class="line">    // 设置选中图片</span><br><span class="line">    VC01.tabBarItem.selectedImage =image;</span><br><span class="line"></span><br><span class="line">    VC01.view.backgroundColor = [UIColor yellowColor];</span><br><span class="line"></span><br><span class="line">    [self addChildViewController:VC01];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于文字属性每次设置setTitleTextAttributes的时候代码很多很烦，所以要进行简化</li>
+<li>当方法方法后面有<strong>UI_APPERANCE</strong>宏的时候，就可以通过appearance对象一次性设置</li>
+</ul>
+<p><strong>步骤</strong></p>
+<ul>
+<li>拿到那个item的apperance</li>
+<li>对这个item进行设置、</li>
+<li>之后所有的item都会是这个属性</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//在自定义的UITabBarController子类中</span><br><span class="line"></span><br><span class="line">//当方法方法后面有UI_APPERANCE宏的时候，就可以通过appearance对象一次性设置</span><br><span class="line">//- (void)setTitleTextAttributes:(nullable NSDictionary&lt;NSString *,id&gt; *)attributes forState:(UIControlState)state NS_AVAILABLE_IOS(5_0) UI_APPEARANCE_SELECTOR;</span><br><span class="line">-(void)settingTitleColorByAppearance&#123;</span><br><span class="line">    // 通过appearance统一设置UITabbarItem的文字属性</span><br><span class="line">    NSMutableDictionary * attrs = [NSMutableDictionary dictionary];</span><br><span class="line">    attrs[NSFontAttributeName] = [UIFont systemFontOfSize:12.0];  // 设置文字大小</span><br><span class="line">    attrs[NSForegroundColorAttributeName] = [UIColor grayColor];  // 设置文字的前景色</span><br><span class="line"></span><br><span class="line">    NSMutableDictionary * selectedAttrs = [NSMutableDictionary dictionary];</span><br><span class="line">    selectedAttrs[NSFontAttributeName] = [UIFont systemFontOfSize:15.0];</span><br><span class="line">    selectedAttrs[NSForegroundColorAttributeName] = [UIColor redColor];</span><br><span class="line"></span><br><span class="line">    UITabBarItem * item = [UITabBarItem appearance];  // 设置appearance</span><br><span class="line">    [item setTitleTextAttributes:attrs forState:UIControlStateNormal];</span><br><span class="line">    [item setTitleTextAttributes:selectedAttrs forState:UIControlStateSelected];</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h5 id="自定义底部tabbar（重点部分）"><a href="#自定义底部tabbar（重点部分）" class="headerlink" title="自定义底部tabbar（重点部分）"></a>自定义底部tabbar（重点部分）</h5><h5 id="覆盖UITabBarController自带的tabBar为自定义的tabBar操作原理"><a href="#覆盖UITabBarController自带的tabBar为自定义的tabBar操作原理" class="headerlink" title="覆盖UITabBarController自带的tabBar为自定义的tabBar操作原理"></a>覆盖UITabBarController自带的tabBar为自定义的tabBar操作原理</h5><blockquote>
+<ul>
+<li>tabBar上的按钮是在UITabBarController的viewDidAppear的时候拿到 self.tabBar 再调用addSubViews添加上去的;</li>
+<li>在viewDidAppear之前把控制器的tabBar换成我们自己的tabBar，就可以把tabBar上的按钮添加到自己的tabBar上；</li>
+<li>但是tabBar控制器的tabBar属性是只读的，不能直接赋值，只能通过KVC模式跟换tabbar</li>
+</ul>
+</blockquote>
+<p><strong>步骤</strong></p>
+<blockquote>
+<ul>
+<li>新建一个继承自UITabbar的类</li>
+<li>在这个类里面实现初始化</li>
+<li>在<code>layoutSubviews</code>方法里面重新布局</li>
+<li>在TabbarController里面跟换tabbar</li>
+<li><strong>虽然我们在TabbarController里面换成了自定义的tabbar，但是因为这个tabbar继承自uitabbar，所以它原来的属性和内容还在</strong></li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;YLCustomTabBar.h&quot;</span><br><span class="line"></span><br><span class="line">@interface YLCustomTabBar()</span><br><span class="line"></span><br><span class="line">/** 发布按钮 */</span><br><span class="line">@property (nonatomic, weak) UIButton * publishBtn;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@implementation YLCustomTabBar</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 初始化</span><br><span class="line"> */</span><br><span class="line">- (instancetype)initWithFrame:(CGRect)frame&#123;</span><br><span class="line">    if (self = [super initWithFrame:frame]) &#123;</span><br><span class="line"></span><br><span class="line">        // 设置tabbar的子控件</span><br><span class="line">        UIButton * publishBtn = [UIButton buttonWithType:UIButtonTypeCustom];</span><br><span class="line">        [publishBtn setBackgroundImage:[UIImage imageNamed:@&quot;Add_Center&quot;] forState:UIControlStateNormal];</span><br><span class="line">        [publishBtn setBackgroundImage:[UIImage imageNamed:@&quot;Add_Center&quot;] forState:UIControlStateHighlighted];</span><br><span class="line">        [publishBtn sizeToFit];</span><br><span class="line"></span><br><span class="line">        [self addSubview:publishBtn];</span><br><span class="line">        self.publishBtn = publishBtn;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 重写布局子控件的方法进行布局</span><br><span class="line"> */</span><br><span class="line">- (void)layoutSubviews&#123;</span><br><span class="line">    [super layoutSubviews];</span><br><span class="line">    NSLog(@&quot;重新布局&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    // 1.设置加号按钮的位置</span><br><span class="line">    CGPoint temp =self.publishBtn.center;</span><br><span class="line">    temp.x=self.frame.size.width/2;</span><br><span class="line">    temp.y=self.frame.size.height/2;</span><br><span class="line">    self.publishBtn.center=temp;</span><br><span class="line"></span><br><span class="line">    // 2.设置其它UITabBarButton的位置和尺寸</span><br><span class="line">    CGFloat tabbarButtonW =self.frame.size.width /3;</span><br><span class="line">    CGFloat tabbarButtonIndex =0;</span><br><span class="line">    for (UIView *child in self.subviews) &#123;</span><br><span class="line">        Class class = NSClassFromString(@&quot;UITabBarButton&quot;);</span><br><span class="line">        if ([child isKindOfClass:class]) &#123;</span><br><span class="line">            // 设置宽度</span><br><span class="line">            CGRect temp1=child.frame;</span><br><span class="line">            temp1.size.width=tabbarButtonW;</span><br><span class="line">            temp1.origin.x=tabbarButtonIndex * tabbarButtonW;</span><br><span class="line">            child.frame=temp1;</span><br><span class="line">            // 增加索引</span><br><span class="line">            tabbarButtonIndex++;</span><br><span class="line">            if (tabbarButtonIndex ==1) &#123;//如果底部有5个按钮这里就是2</span><br><span class="line">                tabbarButtonIndex++;</span><br><span class="line">            &#125;</span><br><span class="line">            NSLog(@&quot;frame----%f&quot;,child.frame.origin.x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line">  </span><br><span class="line">//在自定义的UITaBBarController子类中：</span><br><span class="line">[self setValue:[[YLCustomTabBar alloc]init] forKeyPath:@&quot;tabBar&quot;];</span><br></pre></td></tr></table></figure>
+
+<p>![Demo地址：<a target="_blank" rel="noopener" href="https://github.com/yuanliangYL/iOSUITabBarControllerDeepUsing]">https://github.com/yuanliangYL/iOSUITabBarControllerDeepUsing]</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Albert Yuan</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://yuanliangyl.github.io/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/">https://yuanliangyl.github.io/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://yuanliangyl.github.io" target="_blank">Albert Yuan's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/iOS/">iOS</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&amp;refer=http%3A%2F%2Fimages2015.cnblogs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631242411&amp;t=6c8a605550b8da493ae89b30e55f1a65" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/"><img class="prev-cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b" onerror="onerror=null;src='/img/404.gif'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">iOS音视频开发（四）重识音频</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/06/iOS/Undefined-symbol-OBJC-CLASS/" title="Undefined_symbol:_OBJC_CLASS_xxx解决方法"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fuser-images.githubusercontent.com%2F6682655%2F78047809-75640800-7396-11ea-8925-5e180dabf2e0.png&refer=http%3A%2F%2Fuser-images.githubusercontent.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630822158&t=8eccbfea06e2cb6b293966f1a33f5476" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-06</div><div class="title">Undefined_symbol:_OBJC_CLASS_xxx解决方法</div></div></a></div><div><a href="/2021/08/05/iOS/iOSObserverCrashHandle/" title="iOS多次移除Observer或者移除不存在的Observer导致崩溃的3中解决方案"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic4.zhimg.com%2Fv2-79557720b514f834d8e541640c76ac24_1200x500.jpg&refer=http%3A%2F%2Fpic4.zhimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1630721121&t=933bbd5d3990e3dde4924a6ed769a527" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-05</div><div class="title">iOS多次移除Observer或者移除不存在的Observer导致崩溃的3中解决方案</div></div></a></div><div><a href="/2021/08/09/iOS动画/iOS动画概述/" title="iOS动画框架简述"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01afc6582c0ebba84a0d304f197129.gif" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-09</div><div class="title">iOS动画框架简述</div></div></a></div><div><a href="/2021/08/09/iOS动画/图层数/" title="iOS CoreAnimation(核心动画一)图层树Layer"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://zsisme.gitbooks.io/ios-/content/chapter1/1.1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-09</div><div class="title">iOS CoreAnimation(核心动画一)图层树Layer</div></div></a></div><div><a href="/2021/08/09/iOS动画/图形几何学/" title="iOS CoreAnimation(核心动画三)图形几何学"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg95.699pic.com%2Fxsj%2F0q%2Fcy%2F3y.jpg%21%2Ffw%2F700%2Fwatermark%2Furl%2FL3hzai93YXRlcl9kZXRhaWwyLnBuZw%2Falign%2Fsoutheast&refer=http%3A%2F%2Fimg95.699pic.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-09</div><div class="title">iOS CoreAnimation(核心动画三)图形几何学</div></div></a></div><div><a href="/2021/08/09/iOS动画/寄宿图/" title="iOS CoreAnimation(核心动画二)寄宿图：layer图层中包含的图"><img class="cover" src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Faliyunzixunbucket.oss-cn-beijing.aliyuncs.com%2Fjpg%2Fa8185223322edeb17d85a61499a02eb0.jpg%3Fx-oss-process%3Dimage%2Fresize%2Cp_100%2Fauto-orient%2C1%2Fquality%2Cq_90%2Fformat%2Cjpg%2Fwatermark%2Cimage_eXVuY2VzaGk%3D%2Ct_100&refer=http%3A%2F%2Faliyunzixunbucket.oss-cn-beijing.aliyuncs.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1631083570&t=34f868923c9dc614649170fc9e9a37fb" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-09</div><div class="title">iOS CoreAnimation(核心动画二)寄宿图：layer图层中包含的图</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="/img/favicon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Albert Yuan</div><div class="author-info__description">博学之,审问之,慎思之,明辨之,笃行之</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yuanliangYL"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/yuanliangYL" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:yuanliangios@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="qq:1023817403" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">love cat , love life</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81UITabBarController%E7%AE%80%E4%BB%8B"><span class="toc-text">一、UITabBarController简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81UITabBarController%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">二、UITabBarController的原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81UI%E7%BB%93%E6%9E%84%E4%B8%8E%E6%BA%90%E7%A0%81%E7%BB%93%E6%9E%84%E5%9B%BE%E8%A7%A3"><span class="toc-text">三、UI结构与源码结构图解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">四、基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-text">基本使用流程：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BD%BF%E7%94%A8"><span class="toc-text">五、自定义使用</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BB%A5%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E6%96%B9%E5%BC%8F%E5%AE%9E%E7%8E%B0UITabBaController"><span class="toc-text">以自定义的方式实现UITabBaController</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BA%95%E9%83%A8tabbar%EF%BC%88%E9%87%8D%E7%82%B9%E9%83%A8%E5%88%86%EF%BC%89"><span class="toc-text">自定义底部tabbar（重点部分）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A6%86%E7%9B%96UITabBarController%E8%87%AA%E5%B8%A6%E7%9A%84tabBar%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84tabBar%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">覆盖UITabBarController自带的tabBar为自定义的tabBar操作原理</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/" title="iOSUITabBarContrller详解与使用"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&amp;refer=http%3A%2F%2Fimages2015.cnblogs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631242411&amp;t=6c8a605550b8da493ae89b30e55f1a65" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOSUITabBarContrller详解与使用"/></a><div class="content"><a class="title" href="/2021/08/11/iOS/iOSUITabBarContrller%E8%AF%A6%E8%A7%A3/" title="iOSUITabBarContrller详解与使用">iOSUITabBarContrller详解与使用</a><time datetime="2021-08-11T06:50:17.785Z" title="更新于 2021-08-11 14:50:17">2021-08-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/" title="iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic2.zhimg.com%2Fv2-e68872d834e22ac7b0ed48495df14280_1440w.jpg%3Fsource%3D172ae18b&amp;refer=http%3A%2F%2Fpic2.zhimg.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1630748168&amp;t=1494cc8c3e460d9da07715309293b0b9" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建"/></a><div class="content"><a class="title" href="/2021/08/05/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E4%BA%8C/" title="iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建">iOS音视频开发（二）开发库的选择及Mac/Windows环境搭建</a><time datetime="2021-08-11T03:06:35.907Z" title="更新于 2021-08-11 11:06:35">2021-08-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/09/iOS%E5%8A%A8%E7%94%BB/%E5%9B%BE%E5%BD%A2%E5%87%A0%E4%BD%95%E5%AD%A6/" title="iOS CoreAnimation(核心动画三)图形几何学"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg95.699pic.com%2Fxsj%2F0q%2Fcy%2F3y.jpg%21%2Ffw%2F700%2Fwatermark%2Furl%2FL3hzai93YXRlcl9kZXRhaWwyLnBuZw%2Falign%2Fsoutheast&amp;refer=http%3A%2F%2Fimg95.699pic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS CoreAnimation(核心动画三)图形几何学"/></a><div class="content"><a class="title" href="/2021/08/09/iOS%E5%8A%A8%E7%94%BB/%E5%9B%BE%E5%BD%A2%E5%87%A0%E4%BD%95%E5%AD%A6/" title="iOS CoreAnimation(核心动画三)图形几何学">iOS CoreAnimation(核心动画三)图形几何学</a><time datetime="2021-08-10T09:30:12.042Z" title="更新于 2021-08-10 17:30:12">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/Swift/swift%E7%B1%BB%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93/" title="swift类与结构体"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg-blog.csdnimg.cn%2F20200701084826925.png%3Fx-oss-process%3Dimage%2Fwatermark%2Ctype_ZmFuZ3poZW5naGVpdGk%2Cshadow_10%2Ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0dhaWJiMTIz%2Csize_16%2Ccolor_FFFFFF%2Ct_70&amp;refer=http%3A%2F%2Fimg-blog.csdnimg.cn&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631177436&amp;t=fc6a8a477b138eb03ed48d75c2393f04" onerror="this.onerror=null;this.src='/img/404.gif'" alt="swift类与结构体"/></a><div class="content"><a class="title" href="/2021/08/10/Swift/swift%E7%B1%BB%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93/" title="swift类与结构体">swift类与结构体</a><time datetime="2021-08-10T08:51:21.838Z" title="更新于 2021-08-10 16:51:21">2021-08-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/" title="iOS音视频开发（四）重识音频"><img src= "data:image/gif;base64,R0lGODdhAQABAPAAAMPDwwAAACwAAAAAAQABAAACAkQBADs=" data-lazy-src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fbpic.ooopic.com%2F15%2F18%2F53%2F16bOOOPIC32_1024.jpg%21%2Ffw%2F780%2Fquality%2F90%2Funsharp%2Ftrue%2Fcompress%2Ftrue&amp;refer=http%3A%2F%2Fbpic.ooopic.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631154236&amp;t=41dee32ac306672aa6785a6d138a850b" onerror="this.onerror=null;this.src='/img/404.gif'" alt="iOS音视频开发（四）重识音频"/></a><div class="content"><a class="title" href="/2021/08/10/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/iOS%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9B%9B%E9%87%8D%E8%AF%86%E9%9F%B3%E9%A2%91/" title="iOS音视频开发（四）重识音频">iOS音视频开发（四）重识音频</a><time datetime="2021-08-10T06:57:26.564Z" title="更新于 2021-08-10 14:57:26">2021-08-10</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimages2015.cnblogs.com%2Fblog%2F877749%2F201602%2F877749-20160202134709194-1710798604.png&amp;refer=http%3A%2F%2Fimages2015.cnblogs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1631242411&amp;t=6c8a605550b8da493ae89b30e55f1a65')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Albert Yuan</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcom to my  blog</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="font-plus" type="button" title="放大字体"><i class="fas fa-plus"></i></button><button id="font-minus" type="button" title="缩小字体"><i class="fas fa-minus"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="algolia-search"><div class="search-dialog"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr/><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="/js/search/algolia.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.2
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container:not\([display]\)').forEach(node => {
+            const target = node.parentNode
+            if (target.nodeName.toLowerCase() === 'li') {
+              target.parentNode.classList.add('has-jax')
+            } else {
+              target.classList.add('has-jax')
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typeset()
+}</script><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'REc8eytE1gJDl3d8FkudLNlL-gzGzoHsz',
+      appKey: 'gGO3y8I9oVlc4Cd5N1fizNPW',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !true) {
+  if (true) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="255,0,0" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
